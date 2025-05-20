@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             body: formData,
             headers: {
                 "X-Requested-With": "XMLHttpRequest"
-            }
+            } //ajax in login/signup
         })
         .then(res => res.text())
         .then(response => {
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
                 },
-                body: `subject_id=${subjectId}&action=${action}`
+                body: `subject_id=${subjectId}&action=${action}` //ajax in follow/ unfollow
             })
             .then(res => res.text())
             .then(msg => {
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fetch('like.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `id=${postId}&type=${type}`
+                body: `id=${postId}&type=${type}` //ajax in likes
             })
             .then(res => res.json())
             .then(data => {
@@ -186,14 +186,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return; 
             }
     
-            fetch("search.php?query=" + encodeURIComponent(query))
+            fetch("search.php?query=" + encodeURIComponent(query)) //ajax in search on enter
             .then(res => res.text())
             .then(html => {
                 document.querySelector(".posts").innerHTML = html;
             });
         }
     });
-    
-
-    
 });

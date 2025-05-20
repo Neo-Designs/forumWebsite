@@ -23,9 +23,9 @@
 <div class="sort-section">
     <label for="sort">Sort posts:</label>
     <select id="sort" onchange="sortPosts(this.value)">
-        <option value="newest">Newest</option>
-        <option value="most_liked">Most Liked</option>
-        <option value="trending">Trending</option>
+        <option value="newest" <?= $sort == 'newest' ? 'selected' : '' ?>>Newest</option>
+        <option value="most_liked" <?= $sort == 'most_liked' ? 'selected' : '' ?>>Most Liked</option>
+        <option value="trending" <?= $sort == 'trending' ? 'selected' : '' ?>>Trending</option>
     </select>
 </div>
 
@@ -37,11 +37,12 @@
         </div>
     </div>
 
-
     <aside class="sidebar-container">
         <div class="subject-sidebar">
             <h3><?php echo $subject['name']; ?></h3>
             <p><?php echo $subject['description']; ?></p>
+
+            <hr>
             <p><strong>Followers:</strong>
             <?php 
                 $f_stmt = $conn->prepare("SELECT COUNT(*) as count FROM followers WHERE subject_id = ?");
@@ -53,4 +54,14 @@
             ?></p>
         </div>
     </aside>
+
 </div>
+
+<script>
+//sort posts
+function sortPosts(value) {
+    const params = new URLSearchParams(window.location.search);
+    params.set('sort', value);
+    window.location.search = params.toString();
+}
+</script>

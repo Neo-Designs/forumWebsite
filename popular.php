@@ -1,6 +1,8 @@
 <?php
 include 'init.php';
 include 'db.php';
+include 'sql_queries.php';
+
 
 $stmt = $conn->prepare(
 "SELECT posts.*, subjects.name AS subject_name, users.display_name AS poster_name, users.avatar AS poster_avatar,
@@ -18,7 +20,14 @@ $posts = $stmt->get_result();
 $subjectsQuery = "SELECT * FROM subjects ORDER BY name";
 $subjects = $conn->query($subjectsQuery);
 
-$helperQuery = "SELECT username, avatar FROM users ORDER BY id LIMIT 5";
+$helperQuery = "
+    SELECT users.display_name, users.avatar, COUNT(posts.id) AS post_count
+    FROM users
+    LEFT JOIN posts ON users.id = posts.poster
+    GROUP BY users.id
+    ORDER BY post_count DESC
+    LIMIT 5
+";
 $helpers = $conn->query($helperQuery);
 ?>
 

@@ -1,12 +1,27 @@
 <section class="leaderboard">
     <h3>Top Bridge Builders</h3>
     <ul>
-        <?php while($helper = $helpers->fetch_assoc()): ?>
-        <li>
-            <img src="images/<?= htmlspecialchars($helper['avatar']) ?>" class="avatar-sm">
-            <span><?= htmlspecialchars($helper['username']) ?></span>
-        </li>
-        <?php endwhile; ?>
+        <?php if ($helpers->num_rows > 0): ?>
+            <?php $rank = 1; ?>
+            <?php while($helper = $helpers->fetch_assoc()): ?>
+                <?php
+                    $medal = '';
+                    if ($rank === 1) $medal = '🥇';
+                    elseif ($rank === 2) $medal = '🥈';
+                    elseif ($rank === 3) $medal = '🥉';
+                ?>
+                <li>
+                    <img src="images/<?= htmlspecialchars($helper['avatar']) ?>" class="avatar-sm">
+                    <span>
+                        <?= $medal ?> <?= htmlspecialchars($helper['display_name']) ?>
+                        <small>(<?= $helper['post_count'] ?> posts)</small>
+                    </span>
+                </li>
+                <?php $rank++; ?>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <li>No helpful humans this week 😢</li>
+        <?php endif; ?>
     </ul>
 </section>
 

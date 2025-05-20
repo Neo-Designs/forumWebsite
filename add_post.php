@@ -14,11 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         $imageName = basename($_FILES['image']['name']);
         $targetDir = "images/";
         $imagePath = time() . "_" . $imageName;
-        $targetFile = $targetDir . $imagePath;        
+        $targetFile = $targetDir . $imagePath;
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-            $imagePath = $targetFile;
+            $imagePath = $imagePath;
         }
+
     }
 
     $stmt = $conn->prepare("INSERT INTO posts (title, content, image_url, subject, poster) VALUES (?, ?, ?, ?, ?)");

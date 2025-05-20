@@ -32,7 +32,8 @@ if (isset($postData)): ?>
                     <img src="images/<?= htmlspecialchars($post['image_url']) ?>" alt="Problem image" class="post-image">
                 </div>
             <?php endif; ?>
-            <p class="post-content"><?= htmlspecialchars($post['content']) ?></p>
+            <p class="post-content"><?= htmlspecialchars($post['content']) ?></p><br>
+
             <div class="likes-timestamp-row">
                 <div class="likes-container">
                     <button class="like-btn" data-post-id="<?= $post['id'] ?>" data-type="post">
@@ -47,4 +48,3 @@ if (isset($postData)): ?>
 <?php else: ?>
     <p>No posts found 😢</p>
 <?php endif; ?>
-

@@ -3,7 +3,7 @@
 </div>
 
 <form method="GET" action="search.php" id="searchForm">
-  <input width="200%" type="text" name="query" id="searchInput" placeholder="Search for posts..." required>
+  <input type="text" name="query" id="searchInput" placeholder="Search for posts..." required>
 </form>
 
 

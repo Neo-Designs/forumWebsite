@@ -12,19 +12,57 @@ $stmt->execute();
 $subject = $stmt->get_result()->fetch_assoc();
 $stmt->close();
 
-$stmt = $conn->prepare("SELECT posts.*, subjects.name AS subject_name, users.display_name AS poster_name, users.avatar AS poster_avatar,
-(SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
-(SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked_by_user
-FROM posts
-INNER JOIN subjects ON posts.subject = subjects.id
-INNER JOIN users ON posts.poster = users.id
-WHERE posts.subject = ?
-ORDER BY posts.timestamp DESC");
-$stmt->bind_param("ii", $userId, $subject_id);
+$sort = $_GET['sort'] ?? 'newest';
+
+switch ($sort) {
+    case 'most_liked':
+        $stmt = $conn->prepare(
+            "SELECT posts.*, subjects.name AS subject_name, users.display_name AS poster_name, users.avatar AS poster_avatar,
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked_by_user
+            FROM posts
+            INNER JOIN subjects ON posts.subject = subjects.id
+            INNER JOIN users ON posts.poster = users.id
+            WHERE posts.subject = ?
+            ORDER BY likes DESC, posts.timestamp DESC"
+        );
+        $stmt->bind_param("ii", $userId, $subject_id);
+        break;
+
+    case 'trending':
+        $stmt = $conn->prepare(
+            "SELECT posts.*, subjects.name AS subject_name, users.display_name AS poster_name, users.avatar AS poster_avatar,
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked_by_user
+            FROM posts
+            INNER JOIN subjects ON posts.subject = subjects.id
+            INNER JOIN users ON posts.poster = users.id
+            WHERE posts.subject = ? AND posts.timestamp >= NOW() - INTERVAL 3 DAY
+            ORDER BY likes DESC, posts.timestamp DESC"
+        );
+        $stmt->bind_param("ii", $userId, $subject_id);
+        break;
+
+    case 'newest':
+    default:
+        $stmt = $conn->prepare(
+            "SELECT posts.*, subjects.name AS subject_name, users.display_name AS poster_name, users.avatar AS poster_avatar,
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS likes,
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ?) AS liked_by_user
+            FROM posts
+            INNER JOIN subjects ON posts.subject = subjects.id
+            INNER JOIN users ON posts.poster = users.id
+            WHERE posts.subject = ?
+            ORDER BY posts.timestamp DESC"
+        );
+        $stmt->bind_param("ii", $userId, $subject_id);
+        break;
+}
+
 $stmt->execute();
 $subjectPosts = $stmt->get_result();
-?>
 
+?>
 
 <!DOCTYPE html>
 <html lang="en">
